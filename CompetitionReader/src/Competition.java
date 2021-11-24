@@ -1,11 +1,12 @@
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 public class Competition {
-	String name;
-	String link;
-	Date date;
-	LinkedList<Team> teams;
+	private String name;
+	private String link;
+	private Date date;
+	private LinkedList<Team> teams;
 
 	public Competition(String name) {
 		this(name, "", null);
@@ -16,5 +17,52 @@ public class Competition {
 		this.link = link;
 		this.date = date;
 		this.teams = new LinkedList<>();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public LinkedList<Team> getTeams() {
+		return teams;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
+	}
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void addTeam(Team team) {
+		this.teams.add(team);
+	}
+
+	public void removeTeam(String name) {
+		Iterator<Team> it = teams.iterator();
+		while (it.hasNext()) {
+			Team team = it.next();
+			if (team.getName().equals(name)) {
+				teams.remove(team);
+				return;
+			}
+		}
+	}
+
+	public void removeTeam(Team team) {
+		teams.remove(team);
 	}
 }
