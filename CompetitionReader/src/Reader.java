@@ -1,8 +1,12 @@
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -11,12 +15,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 public class Reader {
 	public static LinkedList<Competition> competitions;
 
-	public static void main(String args[]) throws IOException {
+	public static void main(String args[]) throws IOException, InvalidFormatException {
 		competitions = new LinkedList<>();
-		FileInputStream fis = new FileInputStream(new File("competitions.xlsx"));
-		XSSFWorkbook wb = new XSSFWorkbook(fis);
+		XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream("competitions.xlsx"));
 		DataFormatter formatter = new DataFormatter();
-
+		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+			XSSFSheet sheet = wb.getSheetAt(i);
+			System.out.println(sheet.getSheetName());
+		}
 		int id = 0;
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
 			XSSFSheet sheet = wb.getSheetAt(i);
@@ -54,17 +60,54 @@ public class Reader {
 				currentComp.teams.add(currentTeam);
 			competitions.add(currentComp);
 		}
+
+		wb.removeSheetAt(0);
+		wb.removeSheetAt(0);
 		for (Competition comp : competitions) {
-			System.out.println(String.format("%s %s %s", comp.name, comp.link, comp.date.toString()));
-			for (Team team : comp.teams) {
-				System.out.println("Team " + team.name);
-				for (Student student : team.students) {
-					System.out.println(
-							String.format("%s %s %s %s", student.name, student.id, student.major, student.rank));
-				}
-			}
+			write(comp, wb);
 		}
+		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+			XSSFSheet sheet = wb.getSheetAt(i);
+			System.out.println(sheet.getSheetName());
+		}
+		wb.write(new FileOutputStream("competitions-new.xlsx"));
 		wb.close();
 	}
-	
+
+	public static void write(Competition comp, XSSFWorkbook wb) throws IOException {
+		XSSFSheet sheet = wb.createSheet(comp.name);
+		sheet.createRow(0).createCell(0).setCellValue("Competition Name");
+		sheet.getRow(0).createCell(1).setCellValue(comp.name);
+
+		sheet.createRow(1).createCell(0).setCellValue("Competition Link");
+		sheet.getRow(1).createCell(1).setCellValue(comp.link);
+
+		sheet.createRow(2).createCell(0).setCellValue("Competition Date");
+		CellStyle cellStyle = wb.createCellStyle();
+		CreationHelper createHelper = wb.getCreationHelper();
+		cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yy"));
+		sheet.getRow(2).createCell(1, CellType.NUMERIC).setCellValue(comp.date);
+		sheet.getRow(2).getCell(1).setCellStyle(cellStyle);
+
+		int curRow = 3;
+		for (Team team : comp.teams) {
+			sheet.createRow(curRow).createCell(1).setCellValue("Student ID");
+			sheet.getRow(curRow).createCell(0, CellType.BLANK);
+			sheet.getRow(curRow).createCell(2).setCellValue("Student Name");
+			sheet.getRow(curRow).createCell(3).setCellValue("Major");
+			sheet.getRow(curRow).createCell(3 + 1).setCellValue("Rank");
+			sheet.getRow(curRow).createCell(5).setCellValue(team.name);
+			int num = 1;
+			for (Student student : team.students) {
+				curRow++;
+				sheet.createRow(curRow).createCell(0).setCellValue(num);
+				sheet.getRow(curRow).createCell(1).setCellValue(student.id);
+				sheet.getRow(curRow).createCell(2).setCellValue(student.name);
+				sheet.getRow(curRow).createCell(3).setCellValue(student.major);
+				sheet.getRow(curRow).createCell(3 + 1).setCellValue(student.rank);
+				num++;
+			}
+			curRow++;
+		}
+	}
 }
