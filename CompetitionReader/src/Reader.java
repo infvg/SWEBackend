@@ -39,7 +39,7 @@ public class Reader {
 				case BLANK:
 					if (currentTeam != null)
 						currentComp.teams.add(currentTeam);
-					currentTeam = new Team(id);
+					currentTeam = new Team(id, formatter.formatCellValue(row.getCell(5)));
 					id++;
 					break;
 				case NUMERIC:
@@ -57,6 +57,7 @@ public class Reader {
 		for (Competition comp : competitions) {
 			System.out.println(String.format("%s %s %s", comp.name, comp.link, comp.date.toString()));
 			for (Team team : comp.teams) {
+				System.out.println("Team " + team.name);
 				for (Student student : team.students) {
 					System.out.println(
 							String.format("%s %s %s %s", student.name, student.id, student.major, student.rank));
@@ -65,5 +66,5 @@ public class Reader {
 		}
 		wb.close();
 	}
-
+	
 }
