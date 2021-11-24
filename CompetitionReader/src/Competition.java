@@ -5,14 +5,16 @@ import java.util.LinkedList;
 public class Competition {
 	private String name;
 	private String link;
+	private Long id;
 	private Date date;
 	private LinkedList<Team> teams;
 
-	public Competition(String name) {
-		this(name, "", null);
+	public Competition(Long id, String name) {
+		this(id, name, "", null);
 	}
 
-	public Competition(String name, String link, Date date) {
+	public Competition(Long id, String name, String link, Date date) {
+		this.id = id;
 		this.name = name;
 		this.link = link;
 		this.date = date;

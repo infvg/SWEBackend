@@ -35,7 +35,7 @@ public class Reader {
 					if (c0.equalsIgnoreCase("competition name")) {
 						if (currentComp != null)
 							competitions.add(currentComp);
-						currentComp = new Competition(row.getCell(1).getStringCellValue());
+						currentComp = new Competition(0l, row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition link")) {
 						currentComp.setLink(row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition date")) {
@@ -67,6 +67,7 @@ public class Reader {
 			write(comp, wb);
 		}
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+
 			XSSFSheet sheet = wb.getSheetAt(i);
 			System.out.println(sheet.getSheetName());
 		}
