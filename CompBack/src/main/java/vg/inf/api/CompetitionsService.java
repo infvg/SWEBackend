@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -65,6 +66,13 @@ public class CompetitionsService {
 			}
 		}
 		return null;
+	}
+
+	public Competition createAndReturn(String name, String link, Date date, int creatorId) {
+		Competition comp = new Competition(name, link, date, creatorId);
+		competitions.add(comp);
+		ExcelUtil.writeCompetitionSheet(comp, wb);
+		return comp;
 	}
 
 	public void admodCompetition(Competition comp) {

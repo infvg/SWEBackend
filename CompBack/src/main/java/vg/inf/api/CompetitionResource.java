@@ -1,5 +1,6 @@
 package vg.inf.api;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -60,8 +60,8 @@ public class CompetitionResource {
 	// Post requests
 
 	@PostMapping("/competitions")
-	public ResponseEntity<Void> addCompetition(@RequestBody Competition comp) {
-		compService.admodCompetition(comp);
+	public ResponseEntity<Void> createCompetition(@RequestBody String name, @RequestBody String link, @RequestBody Date date, @RequestBody int creatorId) {
+		Competition comp = compService.createAndReturn(name, link, date, creatorId);
 		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{competitionId}")
 				.buildAndExpand(comp.getId()).toUri()).build();
 
