@@ -5,13 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Team {
-	private long id;
+	private int id;
 	private String name;
-	public static long idCounterTeam = 0;
+	public static int idCounter = 0;
 	private List<Student> students;
 
-	public Team(long id, String name) {
-		this.id = id;
+	public Team(String name) {
+		this.id = ++idCounter;
 		this.name = name;
 		this.students = new ArrayList<>();
 	}
@@ -20,7 +20,7 @@ public class Team {
 		return students;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
@@ -32,7 +32,7 @@ public class Team {
 		this.students.add(student);
 	}
 
-	public void removeStudent(long id) {
+	public void removeStudent(int id) {
 		Iterator<Student> it = students.iterator();
 		while (it.hasNext()) {
 			Student student = it.next();
@@ -43,7 +43,7 @@ public class Team {
 		}
 	}
 
-	public Student getStudent(long id) {
+	public Student getStudent(int id) {
 		Iterator<Student> it = students.iterator();
 		while (it.hasNext()) {
 			Student student = it.next();

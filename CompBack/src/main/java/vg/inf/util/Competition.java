@@ -4,28 +4,47 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 public class Competition {
-	public static long idCounterComp = 0;
 	private String name;
 	private String link;
-	private long id;
+	private String id;
 	private Date date;
+	private int creatorId;
 	private List<Team> teams;
 
-	public Competition(Long id, String name) {
-		this(id, name, "", null);
+	public Competition(String name, int creatorId) {
+		this(name, "", null, creatorId);
 	}
 
-	public Competition(long id, String name, String link, Date date) {
+	public Competition(String id, String name, int creatorId) {
+		this(id, name, "", null, creatorId);
+	}
+
+	public Competition(String id, String name, String link, Date date, int creatorId) {
 		this.id = id;
 		this.name = name;
 		this.link = link;
 		this.date = date;
+		this.creatorId = creatorId;
 		this.teams = new ArrayList<>();
 	}
 
-	public long getId() {
+	public Competition(String name, String link, Date date, int creatorId) {
+		this.id = UUID.randomUUID().toString();
+		this.name = name;
+		this.link = link;
+		this.date = date;
+		this.creatorId = creatorId;
+		this.teams = new ArrayList<>();
+	}
+
+	public int getCreatorId() {
+		return creatorId;
+	}
+
+	public String getId() {
 		return id;
 	}
 

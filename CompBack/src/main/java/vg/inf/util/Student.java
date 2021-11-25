@@ -5,18 +5,18 @@ public class Student {
 	private String stId;
 	private String major;
 	private String rank;
-	public static long idCounterStu = 0;
-	private long id;
+	public static int idCounter = 0;
+	private int id;
 
-	public Student(long id, String name, String stId, String major, String rank) {
+	public Student(String name, String stId, String major, String rank) {
 		this.name = name;
-		this.id = id;
+		this.id = ++idCounter;
 		this.stId = stId;
 		this.major = major;
 		this.rank = rank;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 

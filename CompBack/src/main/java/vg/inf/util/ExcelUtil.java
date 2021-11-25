@@ -16,7 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import vg.inf.CompetitionsBackendApplication;
 
 public class ExcelUtil {
-	public static List<Competition> read(XSSFWorkbook wb) {
+	public static List<Competition> readCompetitionSheets(XSSFWorkbook wb) {
 		List<Competition> competitions = new ArrayList<>();
 		DataFormatter formatter = new DataFormatter();
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
@@ -36,7 +36,8 @@ public class ExcelUtil {
 					if (c0.equalsIgnoreCase("competition name")) {
 						if (currentComp != null)
 							competitions.add(currentComp);
-						currentComp = new Competition(++Competition.idCounterComp, row.getCell(1).getStringCellValue());
+						currentComp = new Competition(row.getCell(2).getStringCellValue(),
+								row.getCell(1).getStringCellValue(),(int) row.getCell(3).getNumericCellValue());
 					} else if (c0.equalsIgnoreCase("competition link")) {
 						currentComp.setLink(row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition date")) {
@@ -46,12 +47,12 @@ public class ExcelUtil {
 				case BLANK:
 					if (currentTeam != null)
 						currentComp.addTeam(currentTeam);
-					currentTeam = new Team(++Team.idCounterTeam, formatter.formatCellValue(row.getCell(5)));
+					currentTeam = new Team(formatter.formatCellValue(row.getCell(5)));
 					break;
 				case NUMERIC:
-					currentTeam.addStudent(new Student(++Student.idCounterStu, row.getCell(2).getStringCellValue(),
-							formatter.formatCellValue(row.getCell(1)), row.getCell(3).getStringCellValue(),
-							formatter.formatCellValue(row.getCell(4))));
+					currentTeam.addStudent(
+							new Student(row.getCell(2).getStringCellValue(), formatter.formatCellValue(row.getCell(1)),
+									row.getCell(3).getStringCellValue(), formatter.formatCellValue(row.getCell(4))));
 				default:
 					break;
 				}
@@ -67,10 +68,18 @@ public class ExcelUtil {
 		Utils.loop(wb.getNumberOfSheets(), i -> wb.removeSheetAt(0));
 	}
 
-	public static void write(Competition comp, XSSFWorkbook wb) {
+	public static void deleteCompetitionSheet(Competition comp, XSSFWorkbook wb) {
+		wb.removeSheetAt(wb.getSheetIndex(comp.getId()));
+	}
+
+	public synchronized static void writeCompetitionSheet(Competition comp, XSSFWorkbook wb) {
+		if (wb.getSheet(comp.getId()) != null)
+			deleteCompetitionSheet(comp, wb);
 		XSSFSheet sheet = wb.createSheet(comp.getName());
 		sheet.createRow(0).createCell(0).setCellValue("Competition Name");
 		sheet.getRow(0).createCell(1).setCellValue(comp.getName());
+		sheet.getRow(0).createCell(2).setCellValue(comp.getId());
+		sheet.getRow(0).createCell(3).setCellValue(comp.getCreatorId());
 
 		sheet.createRow(1).createCell(0).setCellValue("Competition Link");
 		sheet.getRow(1).createCell(1).setCellValue(comp.getLink());
