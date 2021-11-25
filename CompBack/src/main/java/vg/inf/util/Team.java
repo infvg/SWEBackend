@@ -7,6 +7,7 @@ import java.util.List;
 public class Team {
 	private long id;
 	private String name;
+	public static long idCounterTeam = 0;
 	private List<Student> students;
 
 	public Team(long id, String name) {

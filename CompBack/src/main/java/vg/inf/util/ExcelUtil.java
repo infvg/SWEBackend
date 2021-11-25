@@ -1,11 +1,10 @@
-package vg.inf;
+package vg.inf.util;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -14,35 +13,30 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import vg.inf.util.Competition;
-import vg.inf.util.Student;
-import vg.inf.util.Team;
+import vg.inf.CompetitionsBackendApplication;
 
-@Deprecated
-public class Reader {
-	public LinkedList<Competition> competitions;
-
-	public void read() throws IOException, InvalidFormatException {
-		competitions = new LinkedList<>();
-		XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream("competitions.xlsx"));
+public class ExcelUtil {
+	public static List<Competition> read(XSSFWorkbook wb) {
+		List<Competition> competitions = new ArrayList<>();
 		DataFormatter formatter = new DataFormatter();
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
 			XSSFSheet sheet = wb.getSheetAt(i);
 			System.out.println(sheet.getSheetName());
 		}
-		int id = 0;
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
 			XSSFSheet sheet = wb.getSheetAt(i);
 			Team currentTeam = null;
 			Competition currentComp = null;
 			for (Row row : sheet) {
+				if (row.getCell(0) == null)
+					row.createCell(0).setBlank();
 				switch (row.getCell(0).getCellType()) {
 				case STRING:
 					String c0 = row.getCell(0).getStringCellValue();
 					if (c0.equalsIgnoreCase("competition name")) {
 						if (currentComp != null)
 							competitions.add(currentComp);
-						currentComp = new Competition(0l, row.getCell(1).getStringCellValue());
+						currentComp = new Competition(++Competition.idCounterComp, row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition link")) {
 						currentComp.setLink(row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition date")) {
@@ -52,11 +46,10 @@ public class Reader {
 				case BLANK:
 					if (currentTeam != null)
 						currentComp.addTeam(currentTeam);
-					currentTeam = new Team(id, formatter.formatCellValue(row.getCell(5)));
-					id++;
+					currentTeam = new Team(++Team.idCounterTeam, formatter.formatCellValue(row.getCell(5)));
 					break;
 				case NUMERIC:
-					currentTeam.addStudent(new Student(0l, row.getCell(2).getStringCellValue(),
+					currentTeam.addStudent(new Student(++Student.idCounterStu, row.getCell(2).getStringCellValue(),
 							formatter.formatCellValue(row.getCell(1)), row.getCell(3).getStringCellValue(),
 							formatter.formatCellValue(row.getCell(4))));
 				default:
@@ -67,22 +60,14 @@ public class Reader {
 				currentComp.addTeam(currentTeam);
 			competitions.add(currentComp);
 		}
-
-		wb.removeSheetAt(0);
-		wb.removeSheetAt(0);
-		for (Competition comp : competitions) {
-			write(comp, wb);
-		}
-		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
-
-			XSSFSheet sheet = wb.getSheetAt(i);
-			System.out.println(sheet.getSheetName());
-		}
-		wb.write(new FileOutputStream("competitions-new.xlsx"));
-		wb.close();
+		return competitions;
 	}
 
-	public void write(Competition comp, XSSFWorkbook wb) throws IOException {
+	public static void deleteAllSheets(XSSFWorkbook wb) {
+		Utils.loop(wb.getNumberOfSheets(), i -> wb.removeSheetAt(0));
+	}
+
+	public static void write(Competition comp, XSSFWorkbook wb) {
 		XSSFSheet sheet = wb.createSheet(comp.getName());
 		sheet.createRow(0).createCell(0).setCellValue("Competition Name");
 		sheet.getRow(0).createCell(1).setCellValue(comp.getName());
@@ -116,6 +101,12 @@ public class Reader {
 				num++;
 			}
 			curRow++;
+		}
+
+		try {
+			wb.write(new FileOutputStream(CompetitionsBackendApplication.EXCEL_FILE_OUTPUT));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

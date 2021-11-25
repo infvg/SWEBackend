@@ -5,6 +5,7 @@ public class Student {
 	private String stId;
 	private String major;
 	private String rank;
+	public static long idCounterStu = 0;
 	private long id;
 
 	public Student(long id, String name, String stId, String major, String rank) {

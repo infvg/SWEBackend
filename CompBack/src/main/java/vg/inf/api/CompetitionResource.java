@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import vg.inf.CompetitionsService;
 import vg.inf.util.Competition;
 import vg.inf.util.Student;
 import vg.inf.util.Team;

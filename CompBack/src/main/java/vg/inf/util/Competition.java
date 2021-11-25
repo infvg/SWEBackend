@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Competition {
+	public static long idCounterComp = 0;
 	private String name;
 	private String link;
 	private long id;
