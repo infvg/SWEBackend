@@ -18,10 +18,11 @@ import vg.inf.util.Competition;
 import vg.inf.util.Student;
 import vg.inf.util.Team;
 
+@Deprecated
 public class Reader {
-	public static LinkedList<Competition> competitions;
+	public LinkedList<Competition> competitions;
 
-	public static void main(String args[]) throws IOException, InvalidFormatException {
+	public void read() throws IOException, InvalidFormatException {
 		competitions = new LinkedList<>();
 		XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream("competitions.xlsx"));
 		DataFormatter formatter = new DataFormatter();
@@ -55,9 +56,9 @@ public class Reader {
 					id++;
 					break;
 				case NUMERIC:
-					currentTeam.addStudent(
-							new Student(row.getCell(2).getStringCellValue(), formatter.formatCellValue(row.getCell(1)),
-									row.getCell(3).getStringCellValue(), formatter.formatCellValue(row.getCell(4))));
+					currentTeam.addStudent(new Student(0l, row.getCell(2).getStringCellValue(),
+							formatter.formatCellValue(row.getCell(1)), row.getCell(3).getStringCellValue(),
+							formatter.formatCellValue(row.getCell(4))));
 				default:
 					break;
 				}
@@ -81,7 +82,7 @@ public class Reader {
 		wb.close();
 	}
 
-	public static void write(Competition comp, XSSFWorkbook wb) throws IOException {
+	public void write(Competition comp, XSSFWorkbook wb) throws IOException {
 		XSSFSheet sheet = wb.createSheet(comp.getName());
 		sheet.createRow(0).createCell(0).setCellValue("Competition Name");
 		sheet.getRow(0).createCell(1).setCellValue(comp.getName());

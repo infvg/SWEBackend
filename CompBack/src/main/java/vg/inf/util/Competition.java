@@ -1,26 +1,31 @@
 package vg.inf.util;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 public class Competition {
 	private String name;
 	private String link;
-	private Long id;
+	private long id;
 	private Date date;
-	private LinkedList<Team> teams;
+	private List<Team> teams;
 
 	public Competition(Long id, String name) {
 		this(id, name, "", null);
 	}
 
-	public Competition(Long id, String name, String link, Date date) {
+	public Competition(long id, String name, String link, Date date) {
 		this.id = id;
 		this.name = name;
 		this.link = link;
 		this.date = date;
-		this.teams = new LinkedList<>();
+		this.teams = new ArrayList<>();
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -31,7 +36,7 @@ public class Competition {
 		return date;
 	}
 
-	public LinkedList<Team> getTeams() {
+	public List<Team> getTeams() {
 		return teams;
 	}
 
@@ -53,6 +58,28 @@ public class Competition {
 
 	public void addTeam(Team team) {
 		this.teams.add(team);
+	}
+
+	public void removeTeam(long id) {
+		Iterator<Team> it = teams.iterator();
+		while (it.hasNext()) {
+			Team team = it.next();
+			if (team.getId() == id) {
+				teams.remove(team);
+				return;
+			}
+		}
+	}
+
+	public Team getTeam(long id) {
+		Iterator<Team> it = teams.iterator();
+		while (it.hasNext()) {
+			Team team = it.next();
+			if (team.getId() == id) {
+				return team;
+			}
+		}
+		return null;
 	}
 
 	public void removeTeam(String name) {

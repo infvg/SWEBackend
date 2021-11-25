@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -20,7 +21,9 @@ import vg.inf.util.Team;
 public class CompetitionsService {
 
 	private static List<Competition> competitions = new ArrayList<>();
-	private static long idCounter = 0;
+	private static long idCounterComp = 0;
+	private static long idCounterTeam = 0;
+	private static long idCounterStu = 0;
 
 	static {
 		XSSFWorkbook wb = null;
@@ -36,7 +39,6 @@ public class CompetitionsService {
 			XSSFSheet sheet = wb.getSheetAt(i);
 			System.out.println(sheet.getSheetName());
 		}
-		int id = 0;
 		for (int i = 0; i < wb.getNumberOfSheets(); i++) {
 			XSSFSheet sheet = wb.getSheetAt(i);
 			Team currentTeam = null;
@@ -48,7 +50,7 @@ public class CompetitionsService {
 					if (c0.equalsIgnoreCase("competition name")) {
 						if (currentComp != null)
 							competitions.add(currentComp);
-						currentComp = new Competition(++idCounter, row.getCell(1).getStringCellValue());
+						currentComp = new Competition(++idCounterComp, row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition link")) {
 						currentComp.setLink(row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition date")) {
@@ -58,13 +60,12 @@ public class CompetitionsService {
 				case BLANK:
 					if (currentTeam != null)
 						currentComp.addTeam(currentTeam);
-					currentTeam = new Team(id, formatter.formatCellValue(row.getCell(5)));
-					id++;
+					currentTeam = new Team(++idCounterTeam, formatter.formatCellValue(row.getCell(5)));
 					break;
 				case NUMERIC:
-					currentTeam.addStudent(
-							new Student(row.getCell(2).getStringCellValue(), formatter.formatCellValue(row.getCell(1)),
-									row.getCell(3).getStringCellValue(), formatter.formatCellValue(row.getCell(4))));
+					currentTeam.addStudent(new Student(++idCounterStu, row.getCell(2).getStringCellValue(),
+							formatter.formatCellValue(row.getCell(1)), row.getCell(3).getStringCellValue(),
+							formatter.formatCellValue(row.getCell(4))));
 				default:
 					break;
 				}
@@ -73,6 +74,32 @@ public class CompetitionsService {
 				currentComp.addTeam(currentTeam);
 			competitions.add(currentComp);
 		}
+	}
+
+	public void removeCompetition(long id) {
+		Iterator<Competition> it = competitions.iterator();
+		while (it.hasNext()) {
+			Competition competition = it.next();
+			if (competition.getId() == id) {
+				competitions.remove(competition);
+				return;
+			}
+		}
+	}
+
+	public Competition getCompetition(long id) {
+		Iterator<Competition> it = competitions.iterator();
+		while (it.hasNext()) {
+			Competition competition = it.next();
+			if (competition.getId() == id) {
+				return competition;
+			}
+		}
+		return null;
+	}
+
+	public void removeCompetition(Competition competition) {
+		competitions.remove(competition);
 	}
 
 	public List<Competition> getAll() {

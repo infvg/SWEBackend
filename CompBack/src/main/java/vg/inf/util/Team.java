@@ -1,23 +1,25 @@
 package vg.inf.util;
+
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 public class Team {
-	private int id;
+	private long id;
 	private String name;
-	private LinkedList<Student> students;
+	private List<Student> students;
 
-	public Team(int id, String name) {
+	public Team(long id, String name) {
 		this.id = id;
 		this.name = name;
-		this.students = new LinkedList<>();
+		this.students = new ArrayList<>();
 	}
 
-	public LinkedList<Student> getStudents() {
+	public List<Student> getStudents() {
 		return students;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -27,6 +29,28 @@ public class Team {
 
 	public void addStudent(Student student) {
 		this.students.add(student);
+	}
+
+	public void removeStudent(long id) {
+		Iterator<Student> it = students.iterator();
+		while (it.hasNext()) {
+			Student student = it.next();
+			if (student.getId() == id) {
+				students.remove(student);
+				return;
+			}
+		}
+	}
+
+	public Student getStudent(long id) {
+		Iterator<Student> it = students.iterator();
+		while (it.hasNext()) {
+			Student student = it.next();
+			if (student.getId() == id) {
+				return student;
+			}
+		}
+		return null;
 	}
 
 	public void removeStudent(String name) {
