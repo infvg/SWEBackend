@@ -1,3 +1,5 @@
+package vg.inf;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,6 +13,10 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import vg.inf.util.Competition;
+import vg.inf.util.Student;
+import vg.inf.util.Team;
 
 public class Reader {
 	public static LinkedList<Competition> competitions;
@@ -29,7 +35,7 @@ public class Reader {
 			Team currentTeam = null;
 			Competition currentComp = null;
 			for (Row row : sheet) {
-				switch (row.getCell(0).getCellTypeEnum()) {
+				switch (row.getCell(0).getCellType()) {
 				case STRING:
 					String c0 = row.getCell(0).getStringCellValue();
 					if (c0.equalsIgnoreCase("competition name")) {

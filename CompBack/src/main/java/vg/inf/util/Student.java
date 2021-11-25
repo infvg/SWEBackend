@@ -1,9 +1,10 @@
+package vg.inf.util;
 public class Student {
 	private String name;
 	private String id;
 	private String major;
 	private String rank;
-
+	
 	public Student(String name, String id, String major, String rank) {
 		this.name = name;
 		this.id = id;

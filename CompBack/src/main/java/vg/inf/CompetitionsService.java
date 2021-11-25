@@ -1,3 +1,5 @@
+package vg.inf;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,6 +11,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+
+import vg.inf.util.Competition;
+import vg.inf.util.Student;
+import vg.inf.util.Team;
 
 @Service
 public class CompetitionsService {
@@ -36,7 +42,7 @@ public class CompetitionsService {
 			Team currentTeam = null;
 			Competition currentComp = null;
 			for (Row row : sheet) {
-				switch (row.getCell(0).getCellTypeEnum()) {
+				switch (row.getCell(0).getCellType()) {
 				case STRING:
 					String c0 = row.getCell(0).getStringCellValue();
 					if (c0.equalsIgnoreCase("competition name")) {

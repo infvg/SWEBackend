@@ -1,3 +1,4 @@
+package vg.inf.util;
 import java.util.Iterator;
 import java.util.LinkedList;
 
