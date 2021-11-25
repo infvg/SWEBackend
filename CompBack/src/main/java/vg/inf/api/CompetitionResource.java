@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,30 +60,51 @@ public class CompetitionResource {
 	// Post requests
 
 	@PostMapping("/competitions")
-	public ResponseEntity<Void> competitionCommand(@RequestHeader("command") String command,
-			@RequestBody Competition comp) {
-		if (command.equals("admod")) {
-			compService.admodCompetition(comp);
-			return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{competitionId}")
-					.buildAndExpand(comp.getId()).toUri()).build();
-		} else if (command.equals("delete")) {
-			compService.removeCompetition(comp);
-			return ResponseEntity.noContent().build();
-		}
-		return ResponseEntity.noContent().build();
+	public ResponseEntity<Void> addCompetition(@RequestBody Competition comp) {
+		compService.admodCompetition(comp);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{competitionId}")
+				.buildAndExpand(comp.getId()).toUri()).build();
+
 	}
 
 	@PostMapping("/competitions/{competitionId}/team")
-	public ResponseEntity<Void> teamCommand(@RequestHeader("command") String command, @RequestBody String compId,
-			@RequestBody Team team) {
-		if (command.equals("admod")) {
-			compService.admodTeamToCompetition(compId, team);
-			return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{teamId}")
-					.buildAndExpand(team.getId()).toUri()).build();
-		} else if (command.equals("delete")) {
-			compService.removeTeamFromComp(compId, team);
-			return ResponseEntity.noContent().build();
-		}
+	public ResponseEntity<Void> addTeam(@RequestBody String compId, @RequestBody Team team) {
+		compService.admodTeamToCompetition(compId, team);
+		return ResponseEntity.created(
+				ServletUriComponentsBuilder.fromCurrentRequest().path("/{teamId}").buildAndExpand(team.getId()).toUri())
+				.build();
+
+	}
+
+	// Put requests
+
+	@PutMapping("/competitions/{competitionId}/team")
+	public ResponseEntity<Void> modifyTeam(@RequestBody String compId, @RequestBody Team team) {
+		compService.admodTeamToCompetition(compId, team);
+		return ResponseEntity.created(
+				ServletUriComponentsBuilder.fromCurrentRequest().path("/{teamId}").buildAndExpand(team.getId()).toUri())
+				.build();
+	}
+
+	@PutMapping("/competitions")
+	public ResponseEntity<Void> modifyCompetition(@RequestBody Competition comp) {
+		compService.admodCompetition(comp);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{competitionId}")
+				.buildAndExpand(comp.getId()).toUri()).build();
+
+	}
+
+	// Delete requests
+
+	@DeleteMapping("/competitions/{competitionId}/team")
+	public ResponseEntity<Void> deleteTeam(@RequestBody String compId, @RequestBody Team team) {
+		compService.removeTeamFromComp(compId, team);
+		return ResponseEntity.noContent().build();
+	}
+
+	@DeleteMapping("/competitions")
+	public ResponseEntity<Void> deleteCompetition(@RequestBody Competition comp) {
+		compService.removeCompetition(comp);
 		return ResponseEntity.noContent().build();
 	}
 }
