@@ -6,28 +6,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Competition {
 	private String name;
 	private String link;
 	private String id;
-	private Date date;
-	private int creatorId;
+	@DateTimeFormat  Date date;
 	private List<Team> teams;
 
-	public Competition(String name, int creatorId) {
-		this(name, "", null, creatorId);
+	public Competition(String id, String name) {
+		this(id, name, "", null);
 	}
 
-	public Competition(String id, String name, int creatorId) {
-		this(id, name, "", null, creatorId);
-	}
-
-	public Competition(String id, String name, String link, Date date, int creatorId) {
+	public Competition(String id, String name, String link, Date date) {
 		this.id = id;
 		this.name = name;
 		this.link = link;
 		this.date = date;
-		this.creatorId = creatorId;
 		this.teams = new ArrayList<>();
 	}
 
@@ -36,12 +32,7 @@ public class Competition {
 		this.name = name;
 		this.link = link;
 		this.date = date;
-		this.creatorId = creatorId;
 		this.teams = new ArrayList<>();
-	}
-
-	public int getCreatorId() {
-		return creatorId;
 	}
 
 	public String getId() {
@@ -78,28 +69,6 @@ public class Competition {
 
 	public void addTeam(Team team) {
 		this.teams.add(team);
-	}
-
-	public void removeTeam(long id) {
-		Iterator<Team> it = teams.iterator();
-		while (it.hasNext()) {
-			Team team = it.next();
-			if (team.getId() == id) {
-				teams.remove(team);
-				return;
-			}
-		}
-	}
-
-	public Team getTeam(long id) {
-		Iterator<Team> it = teams.iterator();
-		while (it.hasNext()) {
-			Team team = it.next();
-			if (team.getId() == id) {
-				return team;
-			}
-		}
-		return null;
 	}
 
 	public void removeTeam(String name) {

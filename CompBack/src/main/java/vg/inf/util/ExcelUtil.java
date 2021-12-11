@@ -37,7 +37,7 @@ public class ExcelUtil {
 						if (currentComp != null)
 							competitions.add(currentComp);
 						currentComp = new Competition(row.getCell(2).getStringCellValue(),
-								row.getCell(1).getStringCellValue(),(int) row.getCell(3).getNumericCellValue());
+								row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition link")) {
 						currentComp.setLink(row.getCell(1).getStringCellValue());
 					} else if (c0.equalsIgnoreCase("competition date")) {
@@ -48,11 +48,13 @@ public class ExcelUtil {
 					if (currentTeam != null)
 						currentComp.addTeam(currentTeam);
 					currentTeam = new Team(formatter.formatCellValue(row.getCell(5)));
+					if(row.getCell(6)!= null && row.getCell(6).getBooleanCellValue())
+						currentTeam.setWinner();
 					break;
 				case NUMERIC:
 					currentTeam.addStudent(
 							new Student(row.getCell(2).getStringCellValue(), formatter.formatCellValue(row.getCell(1)),
-									row.getCell(3).getStringCellValue(), formatter.formatCellValue(row.getCell(4))));
+									row.getCell(3).getStringCellValue()));
 				default:
 					break;
 				}
@@ -64,8 +66,10 @@ public class ExcelUtil {
 		return competitions;
 	}
 
-	public static void deleteAllSheets(XSSFWorkbook wb) {
+	public static void rewrite(XSSFWorkbook wb,List<Competition> competitions) {
 		Utils.loop(wb.getNumberOfSheets(), i -> wb.removeSheetAt(0));
+		competitions.forEach(comp -> ExcelUtil.writeCompetitionSheet(comp, wb));
+		
 	}
 
 	public static void deleteCompetitionSheet(Competition comp, XSSFWorkbook wb) {
@@ -75,11 +79,10 @@ public class ExcelUtil {
 	public synchronized static void writeCompetitionSheet(Competition comp, XSSFWorkbook wb) {
 		if (wb.getSheet(comp.getId()) != null)
 			deleteCompetitionSheet(comp, wb);
-		XSSFSheet sheet = wb.createSheet(comp.getName());
+		XSSFSheet sheet = wb.createSheet(comp.getId());
 		sheet.createRow(0).createCell(0).setCellValue("Competition Name");
 		sheet.getRow(0).createCell(1).setCellValue(comp.getName());
 		sheet.getRow(0).createCell(2).setCellValue(comp.getId());
-		sheet.getRow(0).createCell(3).setCellValue(comp.getCreatorId());
 
 		sheet.createRow(1).createCell(0).setCellValue("Competition Link");
 		sheet.getRow(1).createCell(1).setCellValue(comp.getLink());
@@ -97,16 +100,15 @@ public class ExcelUtil {
 			sheet.getRow(curRow).createCell(0, CellType.BLANK);
 			sheet.getRow(curRow).createCell(2).setCellValue("Student Name");
 			sheet.getRow(curRow).createCell(3).setCellValue("Major");
-			sheet.getRow(curRow).createCell(3 + 1).setCellValue("Rank");
 			sheet.getRow(curRow).createCell(5).setCellValue(team.getName());
+			sheet.getRow(curRow).createCell(6).setCellValue(team.isWinner());
 			int num = 1;
 			for (Student student : team.getStudents()) {
 				curRow++;
 				sheet.createRow(curRow).createCell(0).setCellValue(num);
-				sheet.getRow(curRow).createCell(1).setCellValue(student.getId());
+				sheet.getRow(curRow).createCell(1).setCellValue(student.getStId());
 				sheet.getRow(curRow).createCell(2).setCellValue(student.getName());
 				sheet.getRow(curRow).createCell(3).setCellValue(student.getMajor());
-				sheet.getRow(curRow).createCell(3 + 1).setCellValue(student.getRank());
 				num++;
 			}
 			curRow++;

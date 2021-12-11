@@ -34,12 +34,10 @@ public class CompetitionsService {
 
 		competitions = ExcelUtil.readCompetitionSheets(wb);
 	}
-
 	@PreDestroy
 	public void destroy() {
 		try {
-			ExcelUtil.deleteAllSheets(wb);
-			competitions.forEach(comp -> ExcelUtil.writeCompetitionSheet(comp, wb));
+			ExcelUtil.rewrite(wb,competitions);
 			wb.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -79,21 +77,6 @@ public class CompetitionsService {
 		if (getCompetition(comp.getId()) != null)
 			competitions.remove(getCompetition(comp.getId()));
 		competitions.add(comp);
-		ExcelUtil.writeCompetitionSheet(comp, wb);
-	}
-
-	public void admodTeamToCompetition(String compId, Team team) {
-		Competition comp = getCompetition(compId);
-		if (comp.getTeam(team.getId()) != null)
-			comp.removeTeam(team.getId());
-		comp.addTeam(team);
-		ExcelUtil.writeCompetitionSheet(comp, wb);
-	}
-
-	public void removeTeamFromComp(String compId, Team team) {
-		Competition comp = getCompetition(compId);
-		if (comp.getTeam(team.getId()) != null)
-			comp.removeTeam(team.getId());
 		ExcelUtil.writeCompetitionSheet(comp, wb);
 	}
 

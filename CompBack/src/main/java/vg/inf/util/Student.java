@@ -2,26 +2,17 @@ package vg.inf.util;
 
 public class Student {
 	private String name;
-	private String stId;
+	private String id;
 	private String major;
-	private String rank;
-	public static int idCounter = 0;
-	private int id;
-
-	public Student(String name, String stId, String major, String rank) {
+	
+	public Student(String name, String id, String major) {
 		this.name = name;
-		this.id = ++idCounter;
-		this.stId = stId;
+		this.id = id;
 		this.major = major;
-		this.rank = rank;
-	}
-
-	public int getId() {
-		return id;
 	}
 
 	public String getStId() {
-		return stId;
+		return id;
 	}
 
 	public void setMajor(String major) {
@@ -33,21 +24,12 @@ public class Student {
 	}
 
 	public void setStId(String stId) {
-		this.stId = stId;
+		this.id = stId;
 	}
 
 	public String getMajor() {
 		return major;
 	}
-
-	public String getRank() {
-		return rank;
-	}
-
-	public void setRank(String rank) {
-		this.rank = rank;
-	}
-
 	public String getName() {
 		return name;
 	}
