@@ -45,8 +45,8 @@ public class CompetitionResource {
 	// Post requests
 
 	@PostMapping("/competitions")
-	public ResponseEntity<Void> createCompetition(@RequestBody String name, @RequestBody String link, @RequestBody Date date, @RequestBody int creatorId) {
-		Competition comp = compService.createAndReturn(name, link, date, creatorId);
+	public ResponseEntity<Void> createCompetition(@RequestBody Competition comp) {
+		compService.admodCompetition(comp);;
 		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{competitionId}")
 				.buildAndExpand(comp.getId()).toUri()).build();
 
@@ -60,7 +60,16 @@ public class CompetitionResource {
 				.buildAndExpand(comp.getId()).toUri()).build();
 
 	}
+	
+	
+	@GetMapping("/do")
+	public ResponseEntity<Void> etc(@RequestBody String comp) {
+		System.out.println(comp);
+		return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{competitionId}")
+				.buildAndExpand("").toUri()).build();
 
+	}
+	
 	// Delete requests
 
 

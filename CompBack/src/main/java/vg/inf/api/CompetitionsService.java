@@ -66,8 +66,8 @@ public class CompetitionsService {
 		return null;
 	}
 
-	public Competition createAndReturn(String name, String link, Date date, int creatorId) {
-		Competition comp = new Competition(name, link, date, creatorId);
+	public Competition createAndReturn(String name, String link, Date date) {
+		Competition comp = new Competition(name, link, date);
 		competitions.add(comp);
 		ExcelUtil.writeCompetitionSheet(comp, wb);
 		return comp;

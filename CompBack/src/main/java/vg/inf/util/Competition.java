@@ -1,5 +1,6 @@
 package vg.inf.util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -8,13 +9,23 @@ import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class Competition {
+public class Competition implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4350446688823794071L;
+	
 	private String name;
 	private String link;
 	private String id;
 	@DateTimeFormat  Date date;
 	private List<Team> teams;
-
+	
+	
+	public Competition() {
+		super();
+	}
+	
 	public Competition(String id, String name) {
 		this(id, name, "", null);
 	}
@@ -26,13 +37,15 @@ public class Competition {
 		this.date = date;
 		this.teams = new ArrayList<>();
 	}
-
-	public Competition(String name, String link, Date date, int creatorId) {
-		this.id = UUID.randomUUID().toString();
+	public Competition(String name, String link, Date date) {
+		this(UUID.randomUUID().toString(), name, link, date);
+	}
+	public Competition(String id, String name, String link, Date date, List<Team> teams) {
+		this.id = id;
 		this.name = name;
 		this.link = link;
 		this.date = date;
-		this.teams = new ArrayList<>();
+		this.teams = teams;
 	}
 
 	public String getId() {
@@ -81,7 +94,11 @@ public class Competition {
 			}
 		}
 	}
-
+	@Override
+	public String toString() {
+		String s = String.format("name: %s, date: %s, link: %s, id: %s\n", name,date,link,id);
+		return s;
+	}
 	public void removeTeam(Team team) {
 		teams.remove(team);
 	}

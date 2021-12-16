@@ -1,9 +1,18 @@
 package vg.inf.util;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2656367673411073448L;
 	private String name;
 	private String id;
 	private String major;
+	
+	public Student() {
+	}
 	
 	public Student(String name, String id, String major) {
 		this.name = name;
