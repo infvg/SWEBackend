@@ -81,7 +81,7 @@ public class CompetitionsService {
 	}
 
 	public void removeCompetition(Competition competition) {
-		competitions.remove(competition);
+		competitions.remove(getCompetition(competition.getId()));
 		ExcelUtil.deleteCompetitionSheet(competition, wb);
 	}
 

@@ -11,12 +11,12 @@ public class Team implements Serializable{
 	 */
 	private static final long serialVersionUID = 8631126125121754175L;
 	private String name;
-	private boolean isWinner;
+	private boolean winner;
 	private List<Student> students;
 
 	public Team(String name) {
 		this.name = name;
-		isWinner = false;
+		winner = false;
 		this.students = new ArrayList<>();
 	}
 
@@ -24,18 +24,18 @@ public class Team implements Serializable{
 	}
 	public Team(String name, boolean isWinner, List<Student> students) {
 		this.name = name;
-		this.isWinner = isWinner;
+		this.winner = isWinner;
 		this.students = students;
 	}
 	public List<Student> getStudents() {
 		return students;
 	}
 	public void setWinner() {
-		this.isWinner = true;
+		this.winner = true;
 	}
 
 	public boolean isWinner() {
-		return isWinner;
+		return winner;
 	}
 	public String getName() {
 		return name;
