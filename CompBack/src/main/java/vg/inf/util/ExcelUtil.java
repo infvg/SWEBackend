@@ -77,8 +77,9 @@ public class ExcelUtil {
 	}
 
 	public synchronized static void writeCompetitionSheet(Competition comp, XSSFWorkbook wb) {
-		if (wb.getSheet(comp.getId()) != null)
+		if (wb.getSheetIndex(comp.getId()) != -1) {
 			deleteCompetitionSheet(comp, wb);
+		}
 		XSSFSheet sheet = wb.createSheet(comp.getId());
 		sheet.createRow(0).createCell(0).setCellValue("Competition Name");
 		sheet.getRow(0).createCell(1).setCellValue(comp.getName());

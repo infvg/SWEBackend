@@ -77,6 +77,7 @@ public class CompetitionsService {
 		if (getCompetition(comp.getId()) != null)
 			competitions.remove(getCompetition(comp.getId()));
 		competitions.add(comp);
+		System.out.println(comp);
 		ExcelUtil.writeCompetitionSheet(comp, wb);
 	}
 
